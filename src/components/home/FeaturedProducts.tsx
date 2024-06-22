@@ -23,7 +23,9 @@ const getMostPopularProducts = cache(() => {
 //     })
 // }, ['/', 'getNewestProducts'])
 
-export default function FeaturedProducts() {
+export default async function FeaturedProducts() {
+    const products = await getMostPopularProducts()
+
     return (
         <section id="features" className='relative py-10 lg:py-16 xl:py-20'>
             <div className="relative z-2 max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-15 xl:max-w-[87.5rem] lg:pb-8">
@@ -53,10 +55,27 @@ export default function FeaturedProducts() {
                 </div>
        
                 <div className="space-y-12">
-                    <ProductGrid 
-                        title='Most Popular'
-                        productsFetcher={getMostPopularProducts}
-                    />    
+                    <div className='space-y-4'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                            <Suspense
+                                fallback={
+                                    <>
+                                        <ProductCardSkeleton />
+                                        <ProductCardSkeleton />
+                                        <ProductCardSkeleton />
+                                    </>
+                                }
+                            >
+                                {products.map(product => {
+                                    if(product) {
+                                        return (
+                                            <ProductCard key={product.id} product={product} />
+                                        )
+                                    }
+                                })}    
+                            </Suspense>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
@@ -64,43 +83,4 @@ export default function FeaturedProducts() {
             <div className="hidden absolute top-0 right-5 w-0.25 h-full bg-stroke-1 pointer-events-none md:block lg:right-7.5 xl:right-10" />
         </section>
     )
-}
-
-type ProductGridProps = {
-    title: string
-    productsFetcher: () => Promise<Product[]>
-}
-
-function ProductGrid({
-    title,
-    productsFetcher,
-}: ProductGridProps) {
-    return (
-        <div className='space-y-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                <Suspense
-                    fallback={
-                        <>
-                            <ProductCardSkeleton />
-                            <ProductCardSkeleton />
-                            <ProductCardSkeleton />
-                        </>
-                    }
-                >
-                    {/* @ts-expect-error Server Component */}
-                    <ProductSuspense productsFetcher={productsFetcher} />
-                </Suspense>
-            </div>
-        </div>
-    )
-}
-
-async function ProductSuspense({
-    productsFetcher,
-}: {
-    productsFetcher: () => Promise<Product[]>
-}) {
-    return (await productsFetcher()).map(product => (
-        <ProductCard key={product.id} {...product} />
-    ))
 }

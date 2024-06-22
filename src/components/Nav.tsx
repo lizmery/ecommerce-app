@@ -55,6 +55,7 @@ export function Nav() {
                         {navItems.map((item) => (
                             item.title === 'Sign Out' ? 
                                 (<Button 
+                                    key={item.id}
                                     className='lg:hidden block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-primary px-6 py-6' 
                                     variant='link' 
                                     onClick={() => {logout(), toggleNav}}

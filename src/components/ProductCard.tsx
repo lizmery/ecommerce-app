@@ -11,6 +11,7 @@ import { Button } from './ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
 import brackets from '@/assets/svg/Brackets'
+import { Product } from '@prisma/client'
 
 type ProductCardProps = {
     id: string
@@ -22,34 +23,30 @@ type ProductCardProps = {
 }
 
 export function ProductCard({
-    id,
-    name,
-    priceInCents,
-    description,
-    imagePath,
-    purchaseBtn,
-}: ProductCardProps) {
+    product,
+    purchaseBtn
+}: { product: Product; purchaseBtn?: boolean }) {
     return (
         <Card className='flex overflow-hidden flex-col border border-stroke-1 bg-transparent rounded-2xl'>
              <div className='relative w-full h-auto aspect-video'>
-                <Image src={imagePath} fill alt={name} />
+                <Image src={product.imagePath} fill alt={product.name} />
             </div>
             <CardHeader>
-                <CardTitle className='text-n-1 text-2xl leading-normal mb-2'>{name}</CardTitle>
+                <CardTitle className='text-n-1 text-2xl leading-normal mb-2'>{product.name}</CardTitle>
                 <div className='font-grotesk font-light text-xs tracking-tagline uppercase flex mb-4'>
                   {brackets("left")}
-                    <CardDescription className='text-n-3 mx-3'>{formatCurrency(priceInCents / 100)}</CardDescription>
+                    <CardDescription className='text-n-3 mx-3'>{formatCurrency(product.priceInCents / 100)}</CardDescription>
                   {brackets("right")}
                 </div>
             </CardHeader>
             <CardContent className='flex-grow'>
-                <p className='line-clamp-4 text-n-2'>{description}</p>
+                <p className='line-clamp-4 text-n-2'>{product.description}</p>
             </CardContent>
             <CardFooter>
 
                 <Button asChild size='lg' className='w-full'>
                   {purchaseBtn ? 
-                    <Link href={`/account/products/${id}/purchase`}>Purchase</Link> :
+                    <Link href={`/account/products/${product.id}/purchase`}>Purchase</Link> :
                     <Link href={`/signup`}>Get Started</Link>
                   }
                 

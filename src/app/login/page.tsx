@@ -48,7 +48,7 @@ export default function LoginPage() {
                         {errorMessage && <div className='text-destructive text-center'>{errorMessage}</div>}
                         
                         <p className='text-center text-n-1/50'>
-                            Don't have an account?
+                            {"Don't have an account?"}
                             <Link href='/signup' className='pl-2'>
                                 <b>Sign Up</b>
                             </Link>

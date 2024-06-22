@@ -11,7 +11,9 @@ const getProducts = cache(() => {
     })
 }, ['/products', 'getProducts'])
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+    const products = await getProducts()
+
     return (
         <div className='pt-[12rem] -mt-[5.25rem] max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-15 xl:max-w-[87.5rem]'>
             <PageHeader>Products</PageHeader>
@@ -27,17 +29,16 @@ export default function ProductsPage() {
                             <ProductCardSkeleton />
                         </>
                     }
-                >
-                    {/* @ts-expect-error Server Component */}
-                    <ProductsSuspense />
+                >                  
+                    {products.map(product => {
+                        if(product) {
+                            return (
+                                <ProductCard key={product.id} product={product} purchaseBtn />
+                            )
+                        }
+                    })}              
                 </Suspense>
             </div>
         </div>
     )
-}
-
-async function ProductsSuspense() {
-    const products = await getProducts()
-
-    return products.map(product => <ProductCard key={product.id} {...product} purchaseBtn />)
 }
