@@ -68,7 +68,6 @@ export async function register(
             name,
             email,
             password: hashedPassword,
-            isAdmin: true,
          }
       })
 
