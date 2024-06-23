@@ -36,8 +36,6 @@ export default async function AdminProductsPage() {
         orderBy: { name: 'asc'},
     })
 
-    if (products.length === 0) return <p>No products found</p>
-
     return (
         <div className='pt-[12rem] -mt-[5.25rem] max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-15 xl:max-w-[87.5rem] py-10 h-screen'>
             <div className='flex justify-between items-center gap-4'>
