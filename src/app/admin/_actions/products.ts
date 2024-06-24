@@ -5,6 +5,7 @@ import { z } from 'zod'
 import fs from 'fs/promises'
 import { notFound, redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import path from 'path'
 
 const fileSchema = z.instanceof(File, { message: 'Required' })
 const imageSchema = fileSchema.refine(
@@ -27,6 +28,18 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     }
 
     const data = result.data
+
+    // Resolve paths
+    const productsDir = path.resolve('products')
+    const publicProductsDir = path.resolve('public/products')
+
+    // Log paths to debug
+    console.log('productsDir:', productsDir)
+    console.log('publicProductsDir:', publicProductsDir)
+
+    // Ensure directories exist
+    await fs.mkdir(productsDir, { recursive: true })
+    await fs.mkdir(publicProductsDir, { recursive: true })
 
     // file
     await fs.mkdir('products', { recursive: true })
