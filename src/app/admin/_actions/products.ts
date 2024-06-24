@@ -6,6 +6,8 @@ import fs from 'fs/promises'
 import { notFound, redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import path from 'path'
+import { put } from '@vercel/blob'
+import { NextResponse } from 'next/server'
 
 const fileSchema = z.instanceof(File, { message: 'Required' })
 const imageSchema = fileSchema.refine(
@@ -30,12 +32,18 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     const data = result.data
 
     // Resolve paths
-    const productsDir = path.resolve('products')
-    const publicProductsDir = path.resolve('public/products')
+    const productsDir = path.resolve(process.cwd(), 'products')
+    const publicProductsDir = path.resolve(process.cwd(), 'public/products')
 
     // Log paths to debug
     console.log('productsDir:', productsDir)
     console.log('publicProductsDir:', publicProductsDir)
+
+    const blob = await put(data.file.name, data.file, { access: 'public' })
+    const fileData = NextResponse.json(blob)
+    console.log('file data: ', fileData)
+   
+    // const fileDownLink = fileData.downloadUrl
 
     // Ensure directories exist
     await fs.mkdir(productsDir, { recursive: true })
@@ -45,6 +53,8 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     await fs.mkdir('products', { recursive: true })
     const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
     await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
+
+
 
     // image
     await fs.mkdir('public/products', { recursive: true })
