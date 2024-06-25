@@ -149,9 +149,9 @@ export async function toggleProductAvailability(
     revalidatePath('/products')
 }
 
-export const config = {
-    runtime: 'edge',
-  }
+// export const config = {
+//     runtime: 'edge',
+//   }
 
 export async function deleteProduct(id: string) {
     const product = await prisma.product.delete({ where: { id } })
