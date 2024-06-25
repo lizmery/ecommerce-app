@@ -49,11 +49,11 @@ export default async function SuccessPage({
                     </div>
                     <Button className='mt-4 text-n-8' size='lg' asChild>
                         {isSuccess ? (
-                            // await createDownloadVerification(product.id)
+                            await createDownloadVerification(product.id) ? (
 
-                            <a href={`${await createDownloadVerification(product.id)}`}>
+                            <a href={product.fileDownLink}>
                                 Download
-                            </a>
+                            </a> ) :  notFound()
                             // <p>test</p>
                         ) : (
                             <Link href={`/account/products/${product.id}/purchase`}>Try Again</Link>
@@ -84,5 +84,7 @@ async function createDownloadVerification(productId: string) {
         return redirect('/products/download/expired')
     }
 
-    return data.product.fileDownLink
+    console.log('download link: ', data.product.fileDownLink)
+
+    return true
 }
