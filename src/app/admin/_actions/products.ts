@@ -32,27 +32,27 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     const data = result.data
 
     // Resolve paths
-    const productsDir = path.resolve(process.cwd(), 'products')
-    const publicProductsDir = path.resolve(process.cwd(), 'public/products')
+    // const productsDir = path.resolve(process.cwd(), 'products')
+    // const publicProductsDir = path.resolve(process.cwd(), 'public/products')
 
     // Log paths to debug
-    console.log('productsDir:', productsDir)
-    console.log('publicProductsDir:', publicProductsDir)
+    // console.log('productsDir:', productsDir)
+    // console.log('publicProductsDir:', publicProductsDir)
 
-    const blob = await put(data.file.name, data.file, { access: 'public' })
-    const fileData = NextResponse.json(blob)
-    console.log('file data: ', fileData)
-   
-    // const fileDownLink = fileData.downloadUrl
+    const { downloadUrl, pathname } = await put(data.file.name, data.file, { access: 'public' })
+    const fileDownLink = downloadUrl
+    const filePath = pathname
+    console.log('file download link: ', fileDownLink)
+    console.log('file pathname: ', filePath)
 
     // Ensure directories exist
-    await fs.mkdir(productsDir, { recursive: true })
-    await fs.mkdir(publicProductsDir, { recursive: true })
+    // await fs.mkdir(productsDir, { recursive: true })
+    // await fs.mkdir(publicProductsDir, { recursive: true })
 
     // file
-    await fs.mkdir('products', { recursive: true })
-    const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-    await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
+    // await fs.mkdir('products', { recursive: true })
+    // const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
+    // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
 
 
 
