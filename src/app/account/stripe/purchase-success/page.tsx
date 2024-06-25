@@ -3,8 +3,8 @@ import prisma from '@/db/db'
 import { formatCurrency } from '@/lib/formatters'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import Stripe from 'stripe'
+import { notFound, redirect } from 'next/navigation'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
@@ -49,9 +49,12 @@ export default async function SuccessPage({
                     </div>
                     <Button className='mt-4 text-n-8' size='lg' asChild>
                         {isSuccess ? (
-                            <a href={`/account/products/download/${await createDownloadVerification(product.id)}`}>
+                            // await createDownloadVerification(product.id)
+
+                            <a href={`${await createDownloadVerification(product.id)}`}>
                                 Download
                             </a>
+                            // <p>test</p>
                         ) : (
                             <Link href={`/account/products/${product.id}/purchase`}>Try Again</Link>
                         )}
@@ -63,12 +66,23 @@ export default async function SuccessPage({
 }
 
 async function createDownloadVerification(productId: string) {
-    return (
-        await prisma.downloadVerification.create({
-            data: {
-                productId,
-                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // sets expiration date to 24 hours later
-            },
-        })
-    ).id
+    const {id } = await prisma.downloadVerification.create({
+        data: {
+            productId,
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // sets expiration date to 24 hours later
+        },
+    })
+
+    if (id === null) return notFound()
+
+    const data = await prisma.downloadVerification.findUnique({
+        where: { id, expiresAt: { gt: new Date() } },
+        select: { product: { select: { fileDownLink: true, name: true } } },
+    })
+
+    if (data == null) {
+        return redirect('/products/download/expired')
+    }
+
+    return data.product.fileDownLink
 }
