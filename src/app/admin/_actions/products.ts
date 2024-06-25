@@ -5,9 +5,8 @@ import { z } from 'zod'
 import fs from 'fs/promises'
 import { notFound, redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import path from 'path'
 import { put } from '@vercel/blob'
-import { NextResponse } from 'next/server'
+import { del } from '@vercel/blob'
 
 const fileSchema = z.instanceof(File, { message: 'Required' })
 const imageSchema = fileSchema.refine(
@@ -39,11 +38,10 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     // console.log('productsDir:', productsDir)
     // console.log('publicProductsDir:', publicProductsDir)
 
-    const { downloadUrl, pathname } = await put(data.file.name, data.file, { access: 'public' })
+    // file
+    const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
     const fileDownLink = downloadUrl
-    const filePath = pathname
     console.log('file download link: ', fileDownLink)
-    console.log('file pathname: ', filePath)
 
     // Ensure directories exist
     // await fs.mkdir(productsDir, { recursive: true })
@@ -57,9 +55,11 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
 
     // image
-    await fs.mkdir('public/products', { recursive: true })
-    const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-    await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
+    const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
+
+    // await fs.mkdir('public/products', { recursive: true })
+    // const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
+    // await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
 
     await prisma.product.create({
         data: {
@@ -67,8 +67,9 @@ export async function addProduct(prevState: unknown, formData: FormData) {
             name: data.name,
             description: data.description,
             priceInCents: data.priceInCents,
-            filePath,
             imagePath,
+            fileDownLink,
+            imageUrl,
         },
     })
 
@@ -100,18 +101,24 @@ export async function updateProduct(
 
     if (product == null) return notFound()
 
-    let filePath = product.filePath
+    let fileDownLink = product.fileDownLink
     if (data.file != null && data.file.size > 0) {
-        await fs.unlink(product.filePath)
-        filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-        await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
+        const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
+        const fileDownLink = downloadUrl
+        console.log('file download link: ', fileDownLink)
+        // await fs.unlink(product.filePath)
+        // filePath = `products/${crypto.randomUUID()}-${data.file.name}`
+        // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
     }
 
     let imagePath = product.imagePath
+    let imageUrl = product.imageUrl
     if (data.image != null && data.image.size > 0) {
-        await fs.unlink(`public${product.imagePath}`)
-        imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-        await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
+        const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
+
+        // await fs.unlink(`public${product.imagePath}`)
+        // imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
+        // await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
     }
 
     await prisma.product.update({
@@ -120,12 +127,12 @@ export async function updateProduct(
             name: data.name,
             description: data.description,
             priceInCents: data.priceInCents,
-            filePath,
             imagePath,
+            imageUrl,
+            fileDownLink,
         },
     })
 
-    console.log('formdata: ', data)
     revalidatePath('/')
     revalidatePath('/products')
 
@@ -142,13 +149,19 @@ export async function toggleProductAvailability(
     revalidatePath('/products')
 }
 
+export const config = {
+    runtime: 'edge',
+  }
+
 export async function deleteProduct(id: string) {
     const product = await prisma.product.delete({ where: { id } })
 
     if (product == null) return notFound()
 
-    await fs.unlink(product.filePath)
-    await fs.unlink(`public${product.imagePath}`)
+    await del(product.imageUrl)
+
+    // await fs.unlink(product.filePath)
+    // await fs.unlink(`public${product.imagePath}`)
 
     revalidatePath('/')
     revalidatePath('/products')
