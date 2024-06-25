@@ -49,12 +49,9 @@ export default async function SuccessPage({
                     </div>
                     <Button className='mt-4 text-n-8' size='lg' asChild>
                         {isSuccess ? (
-                            await createDownloadVerification(product.id) ? (
-
                             <a href={product.fileDownLink}>
-                               *TEST* Download - {product.fileDownLink}
-                            </a> ) :  notFound()
-                            // <p>test</p>
+                               Download
+                            </a> 
                         ) : (
                             <Link href={`/account/products/${product.id}/purchase`}>Try Again</Link>
                         )}
