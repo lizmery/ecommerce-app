@@ -9,14 +9,14 @@ export async function GET(
 ) {
     const product = await prisma.product.findUnique({
         where: { id },
-        select: { filePath: true, name: true },
+        select: { fileDownLink: true, name: true, imageUrl: true },
     })
 
     if (product == null) return notFound()
 
-    const { size } = await fs.stat(product.filePath)
-    const file = await fs.readFile(product.filePath)
-    const extension = product.filePath.split('.').pop()
+    const { size } = await fs.stat(product.fileDownLink)
+    const file = await fs.readFile(product.fileDownLink)
+    const extension = product.imageUrl.split('.').pop()
 
     return new NextResponse(file, {
         headers: {

@@ -75,7 +75,7 @@ export function ProductForm({ product } : { product?: Product | null }) {
                     className='bg-n-5 border-none'
                 />
                 {product != null && (
-                    <div className='text-muted-foreground'>{product.filePath}</div>
+                    <div className='text-muted-foreground'>{product.fileDownLink}</div>
                 )}
                 {error.file && <div className='text-destructive'>{error.file}</div>}
             </div>
