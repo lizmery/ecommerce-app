@@ -52,7 +52,7 @@ export default async function SuccessPage({
                             await createDownloadVerification(product.id) ? (
 
                             <a href={product.fileDownLink}>
-                                Download
+                                Download - {product.fileDownLink}
                             </a> ) :  notFound()
                             // <p>test</p>
                         ) : (
