@@ -26,7 +26,7 @@ import { useSession } from 'next-auth/react'
 type CheckoutFormProps = {
     product: {
         id: string
-        imagePath: string
+        imageUrl: string
         name: string
         priceInCents: number
         description: string
@@ -57,7 +57,7 @@ export function CheckoutForm({ product, clientSecret }: CheckoutFormProps) {
             <div className='flex gap-4 items-center'>
                 <div className='aspect-video flex-shrink-0 w-1/3 relative'>
                     <Image
-                        src={product.imagePath}
+                        src={product.imageUrl}
                         fill
                         alt={product.name}
                         className='object-cover'

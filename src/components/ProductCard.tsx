@@ -13,15 +13,6 @@ import Image from 'next/image'
 import brackets from '@/assets/svg/Brackets'
 import { Product } from '@prisma/client'
 
-type ProductCardProps = {
-    id: string
-    name: string
-    priceInCents: number
-    description: string
-    imagePath: string
-    purchaseBtn?: boolean
-}
-
 export function ProductCard({
     product,
     purchaseBtn

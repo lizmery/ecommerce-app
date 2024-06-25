@@ -33,7 +33,7 @@ export default async function SuccessPage({
             <div className='flex flex-col lg:flex-row gap-10 items-center'>
                 <div className='aspect-video flex-shrink-0 lg:w-1/3 w-full relative'>
                     <Image
-                        src={product.imagePath}
+                        src={product.imageUrl}
                         fill
                         alt={product.name}
                         className='object-cover'

@@ -19,7 +19,7 @@ type OrderHistoryEmailProps = {
         downloadVerificationId: string
         product: {
             name: string
-            imagePath: string
+            imageUrl: string
             description: string
         }
     }[]

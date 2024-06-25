@@ -12,7 +12,7 @@ import { OrderInfo } from './components/OrderInfo'
 type PurchaseReceiptEmailProps = {
     product: {
         name: string
-        imagePath: string
+        imageUrl: string
         description: string
     }
     order: {

@@ -30,7 +30,7 @@ export async function emailOrderHistory(
                         select: {
                             id: true,
                             name: true,
-                            imagePath: true,
+                            imageUrl: true,
                             description: true,
                         },
                     },

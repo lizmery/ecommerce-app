@@ -15,7 +15,7 @@ type OrderInfoProps = {
         pricePaidInCents: number
     }
     product: {
-        imagePath: string
+        imageUrl: string
         name: string
         description: string
     }
@@ -61,7 +61,7 @@ export function OrderInfo({
                 <Img
                     width='100%'
                     alt={product.name}
-                    src={`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
+                    src={`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imageUrl}`}
                 />
                 <Row className='mt-8'>
                     <Column className='align-bottom'>
