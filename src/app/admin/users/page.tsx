@@ -42,7 +42,7 @@ import {
     const session = await auth()
     const users = await getUsers(session?.user?.id)
 
-    if (users.length === 0) return <p>No users found.</p>
+    if (users.length === 0) return <p className='h-screen'>No users found.</p>
 
     return (
         <div className='pt-[12rem] -mt-[5.25rem] max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-15 xl:max-w-[87.5rem] h-screen'>

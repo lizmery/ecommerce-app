@@ -32,7 +32,7 @@ import { DeleteDropDownItem } from './_components/OrderActions'
  export default async function OrdersPage() {
     const orders = await getOrders()
 
-    if (orders.length === 0) return <p>No sales found.</p>
+    if (orders.length === 0) return <p className='h-screen'>No sales found.</p>
 
     return (
         <div className='pt-[12rem] -mt-[5.25rem] max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-15 xl:max-w-[87.5rem] h-screen'>
