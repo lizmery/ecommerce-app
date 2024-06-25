@@ -76,6 +76,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     // revalidate caching
     revalidatePath('/')
     revalidatePath('/products')
+    revalidatePath('/account/products')
 
     redirect('/admin/products')
 }
