@@ -29,7 +29,7 @@ export function ProductCard({
     return (
         <Card className='flex overflow-hidden flex-col border border-stroke-1 bg-transparent rounded-2xl'>
              <div className='relative w-full h-auto aspect-video'>
-                <Image src={product.imagePath} fill alt={product.name} />
+                <Image src={product.imageUrl} fill alt={product.name} />
             </div>
             <CardHeader>
                 <CardTitle className='text-n-1 text-2xl leading-normal mb-2'>{product.name}</CardTitle>

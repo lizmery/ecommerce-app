@@ -106,9 +106,9 @@ export async function updateProduct(
         const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
         const fileDownLink = downloadUrl
         console.log('file download link: ', fileDownLink)
-        // await fs.unlink(product.filePath)
-        // filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-        // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
+
+        // TODO:
+        // delete file from vercel blob -> need file Url to do so
     }
 
     let imagePath = product.imagePath
@@ -116,9 +116,8 @@ export async function updateProduct(
     if (data.image != null && data.image.size > 0) {
         const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
 
-        // await fs.unlink(`public${product.imagePath}`)
-        // imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-        // await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
+        await del(product.imageUrl)
+
     }
 
     await prisma.product.update({
