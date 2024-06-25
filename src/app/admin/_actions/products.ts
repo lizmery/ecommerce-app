@@ -39,7 +39,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     // console.log('publicProductsDir:', publicProductsDir)
 
     // file
-    const { downloadUrl } = await put(data.name, data.file, { access: 'public' })
+    const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
     const fileDownLink = downloadUrl
     console.log('file download link: ', fileDownLink)
 
@@ -55,7 +55,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
 
     // image
-    const { pathname: imagePath, url: imageUrl } = await put(data.name, data.image, { access: 'public' })
+    const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
 
     // await fs.mkdir('public/products', { recursive: true })
     // const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
@@ -103,7 +103,7 @@ export async function updateProduct(
 
     let fileDownLink = product.fileDownLink
     if (data.file != null && data.file.size > 0) {
-        const { downloadUrl } = await put(data.name, data.file, { access: 'public' })
+        const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
         const fileDownLink = downloadUrl
         console.log('file download link: ', fileDownLink)
         // await fs.unlink(product.filePath)
@@ -114,7 +114,7 @@ export async function updateProduct(
     let imagePath = product.imagePath
     let imageUrl = product.imageUrl
     if (data.image != null && data.image.size > 0) {
-        const { pathname: imagePath, url: imageUrl } = await put(data.name, data.image, { access: 'public' })
+        const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
 
         // await fs.unlink(`public${product.imagePath}`)
         // imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
