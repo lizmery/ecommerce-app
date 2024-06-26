@@ -2,7 +2,6 @@
 
 import prisma from '@/db/db'
 import { z } from 'zod'
-import fs from 'fs/promises'
 import { notFound, redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { put } from '@vercel/blob'
@@ -30,36 +29,11 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
     const data = result.data
 
-    // Resolve paths
-    // const productsDir = path.resolve(process.cwd(), 'products')
-    // const publicProductsDir = path.resolve(process.cwd(), 'public/products')
-
-    // Log paths to debug
-    // console.log('productsDir:', productsDir)
-    // console.log('publicProductsDir:', publicProductsDir)
-
     // file
-    const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
-    const fileDownLink = downloadUrl
-    console.log('file download link: ', fileDownLink)
-
-    // Ensure directories exist
-    // await fs.mkdir(productsDir, { recursive: true })
-    // await fs.mkdir(publicProductsDir, { recursive: true })
-
-    // file
-    // await fs.mkdir('products', { recursive: true })
-    // const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-    // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
-
-
+    const { downloadUrl: fileDownloadLink, url: fileUrl } = await put(data.file.name, data.file, { access: 'public' })
 
     // image
-    const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
-
-    // await fs.mkdir('public/products', { recursive: true })
-    // const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-    // await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
+    const { url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
 
     await prisma.product.create({
         data: {
@@ -67,8 +41,8 @@ export async function addProduct(prevState: unknown, formData: FormData) {
             name: data.name,
             description: data.description,
             priceInCents: data.priceInCents,
-            imagePath,
-            fileDownLink,
+            fileUrl,
+            fileDownloadLink,
             imageUrl,
         },
     })
@@ -102,23 +76,17 @@ export async function updateProduct(
 
     if (product == null) return notFound()
 
-    let fileDownLink = product.fileDownLink
+    let fileDownloadLink = product.fileDownloadLink
+    let fileUrl = product.fileUrl
     if (data.file != null && data.file.size > 0) {
-        const { downloadUrl } = await put(data.file.name, data.file, { access: 'public' })
-        const fileDownLink = downloadUrl
-        console.log('file download link: ', fileDownLink)
-
-        // TODO:
-        // delete file from vercel blob -> need file Url to do so
+        const { downloadUrl: fileDownloadLink, url: fileUrl } = await put(data.file.name, data.file, { access: 'public' })
+        await del(product.fileUrl)
     }
 
-    let imagePath = product.imagePath
     let imageUrl = product.imageUrl
     if (data.image != null && data.image.size > 0) {
-        const { pathname: imagePath, url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
-
+        const { url: imageUrl } = await put(data.image.name, data.image, { access: 'public' })
         await del(product.imageUrl)
-
     }
 
     await prisma.product.update({
@@ -127,9 +95,9 @@ export async function updateProduct(
             name: data.name,
             description: data.description,
             priceInCents: data.priceInCents,
-            imagePath,
             imageUrl,
-            fileDownLink,
+            fileDownloadLink,
+            fileUrl,
         },
     })
 
@@ -149,19 +117,13 @@ export async function toggleProductAvailability(
     revalidatePath('/products')
 }
 
-// export const config = {
-//     runtime: 'edge',
-//   }
-
 export async function deleteProduct(id: string) {
     const product = await prisma.product.delete({ where: { id } })
 
     if (product == null) return notFound()
 
     await del(product.imageUrl)
-
-    // await fs.unlink(product.filePath)
-    // await fs.unlink(`public${product.imagePath}`)
+    await del(product.fileUrl)
 
     revalidatePath('/')
     revalidatePath('/products')
