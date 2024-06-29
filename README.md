@@ -1,6 +1,6 @@
 # Ecommerce App
 
- A fully functional e-commerce shop where the products are only viewable by registered customers. This fullstack app features two separate dashboards based on the user role (customer vs admin). Customers can edit their profile, access the products page, purchase and download paid for products, and view all of their orders. Admins can add, edit, and delete products, delete and view all users, edit user roles, and view all customers and sales/orders.
+ A fully functional e-commerce shop where the products are only viewable by registered customers. This fullstack app features two separate dashboards based on the user role (customer vs admin). Customers can edit their profile, access the products page, purchase and download paid-for products, and view all of their orders. Admins can add, edit, and delete products, delete and view all users, edit user roles, and view all customers and sales/orders.
 
 [View Live](https://ecommerce-app-dun-omega.vercel.app)
 
@@ -31,21 +31,22 @@
 
 ## Screenshots
 ### Home Page
-![screencapture-tamales-clone-herokuapp-2022-03-11-14_36_17](https://user-images.githubusercontent.com/78451440/157984078-3d3a484f-d42c-4f49-abde-63de0eba44c0.png)
+![screencapture-ecommerce-app-dun-omega-vercel-app-2024-06-29-13_21_40 (1)](https://github.com/lizmery/ecommerce-app/assets/78451440/9ab57c4c-0839-40eb-aacd-7b361623bc31)
 
 
 ### Customer Dashboard
-![screencapture-localhost-3000-about-2022-03-11-14_37_01](https://user-images.githubusercontent.com/78451440/157984122-c0e86a40-ef5a-41a0-b7cf-48068d46687a.png)
-
+![Screen Shot 2024-06-29 at 3 40 27 PM](https://github.com/lizmery/ecommerce-app/assets/78451440/45a42401-cab2-41bd-8ff4-75d1e45890e2)
+![screencapture-ecommerce-app-dun-omega-vercel-app-account-products-75468df5-c604-4ce4-951f-f62acd16bf75-purchase-2024-06-29-15_40_44](https://github.com/lizmery/ecommerce-app/assets/78451440/1a070039-ec09-4a74-ade9-9f770b899cab)
 
 
 ## Admin Dashboard
-![screencapture-localhost-3000-checkout-2022-03-11-14_39_04](https://user-images.githubusercontent.com/78451440/157984256-d4bef063-deba-4a90-bd0a-485dfea8d4f7.png)
+![screencapture-ecommerce-app-dun-omega-vercel-app-admin-2024-06-29-15_44_06](https://github.com/lizmery/ecommerce-app/assets/78451440/56eb7afe-9e33-4704-9b32-35a174a38dfe)
+![Screen Shot 2024-06-29 at 3 44 38 PM](https://github.com/lizmery/ecommerce-app/assets/78451440/567d9874-4d30-4378-bb0a-5f43daed3d10)
 
 
 ## Future Implementations
 - “Forgot Password” functionality
-- Shopping Cart - ability to purchase more than one product at a time
+- Shopping Cart: ability to purchase more than one product at a time
 - Customer Dashboard: ability to edit profile image
 - Admin Dashboard: ability to add new users
 - Implement a rewards program feature
