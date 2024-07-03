@@ -36,7 +36,7 @@
 
 ### Customer Dashboard
 ![Screen Shot 2024-06-29 at 3 40 27 PM](https://github.com/lizmery/ecommerce-app/assets/78451440/45a42401-cab2-41bd-8ff4-75d1e45890e2)
-![screencapture-ecommerce-app-dun-omega-vercel-app-account-products-75468df5-c604-4ce4-951f-f62acd16bf75-purchase-2024-06-29-15_40_44](https://github.com/lizmery/ecommerce-app/assets/78451440/1a070039-ec09-4a74-ade9-9f770b899cab)
+
 
 
 ## Admin Dashboard
